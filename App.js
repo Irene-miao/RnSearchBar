@@ -1,21 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import Search from "./search";
+import "./App.css";
 
-export default function App() {
+const posts = [
+  { id: "1", name: "This first post is about food" },
+  { id: "2", name: "This second post is about games" },
+  { id: "3", name: "This third post is about drama" },
+  { id: "4", name: "This last post is about travel" },
+];
+
+const filterPosts = (posts, query) => {
+  if (!query) {
+    return posts;
+  }
+
+  return posts.filter((post) => {
+    const postName = post.name.toLowerCase();
+    return postName.includes(query);
+  });
+};
+
+const App = () => {
+const {search} = window.location;
+const query = new URLSearchParams(search).get('s');
+const filteredPosts = filterPosts(posts, query);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <div>
+      <Search />
+      <ul>
+        {filteredPosts.map(post => (
+          <li key={post.id}>{post.name}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
